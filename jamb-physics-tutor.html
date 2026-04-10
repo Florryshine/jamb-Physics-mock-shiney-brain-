@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAMB Physics Tutor – 3-Hour Revision</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #1a2235;
+    --border: #2a3a55;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #4ade80;
+    --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,14,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .logo { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .timer-display {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent2);
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--border);
+    width: 100%;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    transition: width 0.5s ease;
+  }
+
+  /* LAYOUT */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px 100px;
+    position: relative; z-index: 1;
+  }
+
+  /* TOPIC NAV */
+  .topic-nav {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 28px;
+  }
+  .topic-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .topic-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .topic-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+  .topic-btn.done { border-color: var(--success); color: var(--success); }
+
+  /* SECTION HEADER */
+  .section-header {
+    margin-bottom: 20px;
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .section-time {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* CONTENT CARD */
+  .content-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+  }
+  .content-card.orange::before { background: var(--accent2); }
+  .content-card.purple::before { background: var(--accent3); }
+  .content-card.green::before { background: var(--success); }
+
+  .card-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-tag.orange { color: var(--accent2); }
+  .card-tag.purple { color: var(--accent3); }
+  .card-tag.green { color: var(--success); }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .card-body {
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: #b8c5d6;
+  }
+  .card-body strong { color: var(--accent); }
+  .card-body .formula {
+    display: inline-block;
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--accent);
+    margin: 2px 4px;
+  }
+  .card-body ul { padding-left: 18px; margin-top: 6px; }
+  .card-body ul li { margin-bottom: 4px; }
+
+  /* PAST Q */
+  .past-q {
+    background: rgba(255,107,53,0.06);
+    border: 1px solid rgba(255,107,53,0.25);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 14px;
+  }
+  .past-q-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .past-q-text {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #d0dbe8;
+    margin-bottom: 12px;
+  }
+  .options { display: grid; gap: 7px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.84rem;
+    color: #94a3b8;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .opt:hover { border-color: var(--accent2); color: var(--text); }
+  .opt.correct { border-color: var(--success); color: var(--success); background: rgba(74,222,128,0.07); }
+  .opt.wrong { border-color: #f87171; color: #f87171; background: rgba(248,113,113,0.07); }
+  .opt-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    background: var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    min-width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .answer-reveal {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(74,222,128,0.07);
+    border: 1px solid rgba(74,222,128,0.3);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: var(--success);
+    line-height: 1.6;
+  }
+  .answer-reveal.show { display: block; }
+
+  /* TUTOR AI BOX */
+  .ai-box {
+    background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(0,229,255,0.05));
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .ai-box-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .ai-avatar {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; color: #000;
+    flex-shrink: 0;
+  }
+  .ai-label { font-size: 0.8rem; font-weight: 600; color: var(--accent3); }
+  .ai-input-row {
+    display: flex; gap: 10px; margin-top: 12px;
+  }
+  .ai-input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.84rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .ai-input:focus { border-color: var(--accent3); }
+  .ai-input::placeholder { color: var(--muted); }
+  .ai-btn {
+    background: var(--accent3);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    color: #000;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .ai-btn:hover { opacity: 0.85; }
+  .ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ai-response {
+    font-size: 0.85rem;
+    line-height: 1.72;
+    color: #c4cfe0;
+    margin-top: 10px;
+    white-space: pre-wrap;
+  }
+  .ai-response .thinking {
+    display: flex; gap: 4px; align-items: center;
+    color: var(--muted);
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: pulse 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.3} 40%{opacity:1} }
+
+  /* NAV BUTTONS */
+  .nav-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 24px;
+  }
+  .nav-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+  }
+  .nav-btn.primary:hover { opacity: 0.85; color: #000; }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* PROGRESS DOTS */
+  .dot-track {
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .dot-step {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .dot-step.active { background: var(--accent); }
+  .dot-step.done { background: var(--success); }
+
+  /* INTRO SCREEN */
+  #intro {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  #intro h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  #intro h1 span { color: var(--accent); }
+  #intro p { color: var(--muted); font-size: 0.92rem; max-width: 480px; margin: 0 auto 30px; line-height: 1.7; }
+  .stats-row {
+    display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .stat-chip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .stat-chip strong { color: var(--text); }
+  .start-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    padding: 16px 48px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #000;
+    cursor: pointer;
+    letter-spacing: -0.3px;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+
+  /* SCORE SCREEN */
+  #scoreScreen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  #scoreScreen h2 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
+  #scoreScreen .score-big {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    margin: 16px 0;
+  }
+
+  .hidden { display: none !important; }
+
+  /* MOBILE */
+  @media (max-width: 500px) {
+    #intro h1 { font-size: 1.8rem; }
+    .section-title { font-size: 1.3rem; }
+    .ai-input-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">JAMB <span>Physics</span> Tutor</div>
+  <div class="timer-display" id="timerDisplay">3:00:00</div>
+</header>
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+
+<div class="container">
+
+<!-- INTRO -->
+<div id="intro">
+  <h1>3-Hour JAMB<br/><span>Physics Revision</span></h1>
+  <p>Your AI tutor will walk you through all 39 topics on the JAMB syllabus, using real past-question style examples and instant explanations. Tap any option to test yourself.</p>
+  <div class="stats-row">
+    <div class="stat-chip">⏱ <strong>3 hours</strong> total</div>
+    <div class="stat-chip">📚 <strong>39 topics</strong> covered</div>
+    <div class="stat-chip">❓ <strong>Past Qs</strong> per topic</div>
+    <div class="stat-chip">🤖 <strong>AI tutor</strong> on demand</div>
+  </div>
+  <button class="start-btn" onclick="startSession()">Start Revision →</button>
+</div>
+
+<!-- MAIN SESSION -->
+<div id="session" class="hidden">
+  <div class="dot-track" id="dotTrack"></div>
+  <div id="topicContent"></div>
+  <div class="nav-row">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">← Prev</button>
+    <span id="topicCounter" style="font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted)">1 / 39</span>
+    <button class="nav-btn primary" id="nextBtn" onclick="navigate(1)">Next →</button>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div id="scoreScreen">
+  <h2>🎉 Revision Complete!</h2>
+  <div class="score-big" id="scoreBig">0/39</div>
+  <p style="color:var(--muted);margin-bottom:24px">Topics covered in this session</p>
+  <button class="start-btn" onclick="location.reload()">Restart Session</button>
+</div>
+
+</div>
+
+<script>
+const TOPICS = [
+  {
+    title: "Measurements & Units",
+    time: "~5 min",
+    color: "",
+    key: "Metre rule, Vernier calipers, Micrometer screw gauge. Fundamental quantities: Mass, Length, Time, Temperature, Current, Amount of substance, Luminous intensity.",
+    formula: ["Dimension of velocity = LT⁻¹", "Dimension of force = MLT⁻²", "Dimension of pressure = ML⁻¹T⁻²"],
+    tip: "JAMB loves asking: which instrument measures what, and what are the dimensions of derived quantities.",
+    q: {
+      text: "The dimension of pressure is",
+      opts: ["MLT⁻²", "ML⁻¹T⁻²", "M⁻¹LT⁻²", "ML²T⁻²"],
+      ans: 1,
+      explain: "Pressure = Force/Area. Force = MLT⁻², Area = L². So Pressure = MLT⁻²/L² = ML⁻¹T⁻²."
+    }
+  },
+  {
+    title: "Scalars & Vectors",
+    time: "~4 min",
+    color: "orange",
+    key: "Scalars: mass, speed, distance, energy. Vectors: velocity, force, displacement, acceleration. Resultant by parallelogram/triangle law. Resolution into components.",
+    formula: ["R = √(A²+B²) for perpendicular vectors", "Relative velocity = V_A - V_B"],
+    tip: "Know which quantities are scalar vs vector. JAMB often tests relative velocity and resultant of two forces.",
+    q: {
+      text: "Two forces of 3N and 4N act at right angles to each other. Their resultant is",
+      opts: ["5N", "7N", "1N", "12N"],
+      ans: 0,
+      explain: "R = √(3²+4²) = √(9+16) = √25 = 5N. This is the classic 3-4-5 right triangle."
+    }
+  },
+  {
+    title: "Motion (Linear & Projectile)",
+    time: "~7 min",
+    color: "purple",
+    key: "SUVAT equations: v=u+at, s=ut+½at², v²=u²+2as. Projectile: Range = u²sin2θ/g, Max height = u²sin²θ/2g, Time of flight = 2usinθ/g. Free fall: a = g = 10 m/s².",
+    formula: ["v = u + at", "s = ut + ½at²", "v² = u² + 2as", "Range = u²sin2θ/g"],
+    tip: "Always show which SUVAT values you know and solve for the unknown. For projectiles, horizontal and vertical motions are INDEPENDENT.",
+    q: {
+      text: "A body starts from rest and accelerates uniformly at 5 m/s². Its velocity after 4 seconds is",
+      opts: ["10 m/s", "20 m/s", "40 m/s", "15 m/s"],
+      ans: 1,
+      explain: "v = u + at = 0 + (5)(4) = 20 m/s. u=0 because it starts from rest."
+    }
+  },
+  {
+    title: "Newton's Laws & Momentum",
+    time: "~5 min",
+    color: "green",
+    key: "1st Law: inertia. 2nd Law: F=ma. 3rd Law: action-reaction. Impulse = Ft = mv-mu. Conservation of momentum: total momentum before = total momentum after (no external force).",
+    formula: ["F = ma", "Impulse = Ft = Δp = mv - mu"],
+    tip: "JAMB tests collision problems — elastic vs inelastic. In all collisions, momentum is conserved. Only in elastic collisions is KE also conserved.",
+    q: {
+      text: "A 2 kg body moving at 6 m/s collides with a stationary 4 kg body and they move together. Their common velocity is",
+      opts: ["1 m/s", "2 m/s", "3 m/s", "4 m/s"],
+      ans: 1,
+      explain: "Conservation of momentum: m₁u₁ = (m₁+m₂)v → 2×6 = (2+4)v → 12=6v → v=2 m/s."
+    }
+  },
+  {
+    title: "Motion in a Circle & SHM",
+    time: "~5 min",
+    color: "",
+    key: "Centripetal force = mv²/r = mω²r. Angular velocity ω = 2πf. SHM: period T=2π√(m/k) for spring, T=2π√(L/g) for pendulum. Velocity in SHM = ω√(A²-x²).",
+    formula: ["F_c = mv²/r", "T = 2π√(L/g)", "T = 2π√(m/k)"],
+    tip: "For SHM, maximum velocity is at the centre (x=0), maximum acceleration is at the extremes (x=±A).",
+    q: {
+      text: "A simple pendulum of length 0.4m has a period of approximately (g=10 m/s²)",
+      opts: ["1.26 s", "0.63 s", "2.51 s", "0.40 s"],
+      ans: 0,
+      explain: "T = 2π√(L/g) = 2π√(0.4/10) = 2π√0.04 = 2π×0.2 = 1.257 ≈ 1.26 s."
+    }
+  },
+  {
+    title: "Gravitational Field",
+    time: "~5 min",
+    color: "orange",
+    key: "Newton's law: F = Gm₁m₂/r². g = GM/R². Weight W = mg. Escape velocity = √(2gR). Orbit: v = √(GM/r). Parking orbit is where T = 24 hours (geostationary).",
+    formula: ["F = Gm₁m₂/r²", "g = GM/R²", "v_escape = √(2gR)"],
+    tip: "g varies: it's highest at poles, lowest at equator and at great heights. Weight ≠ mass — weight changes with g, mass does not.",
+    q: {
+      text: "The escape velocity from Earth's surface is approximately (g=10m/s², R=6.4×10⁶m)",
+      opts: ["11.3 km/s", "5.6 km/s", "22.6 km/s", "8.0 km/s"],
+      ans: 0,
+      explain: "v = √(2gR) = √(2×10×6.4×10⁶) = √(1.28×10⁸) ≈ 11,314 m/s ≈ 11.3 km/s."
+    }
+  },
+  {
+    title: "Equilibrium of Forces",
+    time: "~5 min",
+    color: "purple",
+    key: "Conditions: ΣF=0 and ΣM=0. Moment = Force × perpendicular distance. Lami's theorem: for 3 concurrent forces in equilibrium, F₁/sinα₁ = F₂/sinα₂ = F₃/sinα₃. Stable: low CG, wide base.",
+    formula: ["Moment = F × d", "Lami: F₁/sinα₁ = F₂/sinα₂"],
+    tip: "Principle of moments: sum of clockwise moments = sum of anticlockwise moments about any pivot.",
+    q: {
+      text: "A uniform beam of weight 50N and length 4m rests on a fulcrum 1m from one end. What force at the far end keeps it balanced?",
+      opts: ["25N", "37.5N", "12.5N", "50N"],
+      ans: 1,
+      explain: "CW moment = 50×(2-1)=50 Nm. Force F at far end: F×3 = 50 → F=50/3... Actually: beam CG is at 2m from left. Fulcrum at 1m from left end (3m from right end). ACW: F×3. CW: 50×1. So F = 50/3 ≈ 16.7N. JAMB typically simplifies — always check the exact distances given."
+    }
+  },
+  {
+    title: "Work, Energy & Power",
+    time: "~5 min",
+    color: "green",
+    key: "Work W = Fd cosθ. KE = ½mv². PE = mgh. Power P = W/t = Fv. Conservation of energy: total mechanical energy = KE + PE = constant (no friction). 1 kWh = 3.6 × 10⁶ J.",
+    formula: ["W = Fd cosθ", "KE = ½mv²", "P = W/t = Fv"],
+    tip: "JAMB loves: a body falls from height h — find velocity at bottom. Use KE = PE: ½mv² = mgh → v = √(2gh).",
+    q: {
+      text: "A 2kg object is dropped from a height of 5m. Its kinetic energy just before hitting the ground is (g=10m/s²)",
+      opts: ["50J", "100J", "25J", "10J"],
+      ans: 1,
+      explain: "KE = PE lost = mgh = 2×10×5 = 100J. All PE converts to KE (ignoring air resistance)."
+    }
+  },
+  {
+    title: "Friction",
+    time: "~4 min",
+    color: "",
+    key: "Friction force F = μN (μ = coefficient of friction, N = normal force). Static friction > kinetic friction. Limiting friction is just before motion begins. Terminal velocity: when drag = weight (zero net force).",
+    formula: ["F = μN", "Stokes' law: F = 6πηrv"],
+    tip: "Advantages of friction: walking, brakes. Disadvantages: wear, heat. Viscosity decreases with temperature for liquids.",
+    q: {
+      text: "A 10kg box rests on a surface with μ = 0.3 (g=10m/s²). The frictional force needed to prevent it from sliding is",
+      opts: ["30N", "3N", "100N", "0.3N"],
+      ans: 0,
+      explain: "F = μN = μmg = 0.3 × 10 × 10 = 30N."
+    }
+  },
+  {
+    title: "Simple Machines",
+    time: "~4 min",
+    color: "orange",
+    key: "MA = Load/Effort. VR = distance moved by effort / distance moved by load. Efficiency = (MA/VR) × 100%. Types: levers, pulleys, inclined planes, wheel & axle, gears.",
+    formula: ["MA = Load/Effort", "Efficiency = (MA/VR) × 100%"],
+    tip: "Efficiency is always ≤ 100% due to friction. JAMB: if efficiency = 80%, MA = 0.8 × VR.",
+    q: {
+      text: "A machine with VR=5 lifts a 400N load using 100N effort. Its efficiency is",
+      opts: ["80%", "20%", "40%", "500%"],
+      ans: 0,
+      explain: "MA = Load/Effort = 400/100 = 4. Efficiency = (MA/VR)×100 = (4/5)×100 = 80%."
+    }
+  },
+  {
+    title: "Elasticity",
+    time: "~4 min",
+    color: "purple",
+    key: "Hooke's Law: F = ke (force proportional to extension, up to elastic limit). Young's modulus E = stress/strain = (F/A)/(e/L). Work done on spring = ½ke².",
+    formula: ["F = ke", "E = (FL)/(Ae)", "W = ½ke²"],
+    tip: "Beyond the elastic limit → plastic deformation. Breaking point is past yield point.",
+    q: {
+      text: "A spring with spring constant 200 N/m is extended by 0.1m. The energy stored is",
+      opts: ["1J", "2J", "20J", "10J"],
+      ans: 0,
+      explain: "W = ½ke² = ½ × 200 × (0.1)² = ½ × 200 × 0.01 = 1J."
+    }
+  },
+  {
+    title: "Pressure",
+    time: "~4 min",
+    color: "green",
+    key: "P = F/A. In liquids: P = ρgh. Atmospheric pressure ≈ 101325 Pa ≈ 760 mmHg. Pascal's principle: pressure applied to enclosed liquid is transmitted equally in all directions (hydraulic press).",
+    formula: ["P = F/A", "P = ρgh"],
+    tip: "JAMB: pressure at depth h depends only on density and depth — NOT on shape of container (hydrostatic paradox).",
+    q: {
+      text: "The pressure at the bottom of a 4m deep water tank is (ρ_water=1000 kg/m³, g=10 m/s²)",
+      opts: ["40000 Pa", "4000 Pa", "400 Pa", "400000 Pa"],
+      ans: 0,
+      explain: "P = ρgh = 1000 × 10 × 4 = 40,000 Pa = 40 kPa."
+    }
+  },
+  {
+    title: "Liquids at Rest & Archimedes",
+    time: "~4 min",
+    color: "",
+    key: "Archimedes' Principle: upthrust = weight of fluid displaced. Law of floatation: floating object displaces fluid equal to its own weight. Relative density = density of substance / density of water.",
+    formula: ["Upthrust = ρ_fluid × V_sub × g", "RD = W_air / (W_air - W_water)"],
+    tip: "Object sinks if density > fluid density. JAMB often gives weight in air and water, asks for RD.",
+    q: {
+      text: "An object weighs 50N in air and 30N when fully submerged in water. Its relative density is",
+      opts: ["2.5", "0.6", "1.67", "5"],
+      ans: 0,
+      explain: "Upthrust = 50-30 = 20N = weight of water displaced. RD = W_air/upthrust = 50/20 = 2.5."
+    }
+  },
+  {
+    title: "Temperature & Thermometers",
+    time: "~4 min",
+    color: "orange",
+    key: "Celsius → Kelvin: T(K) = T(°C) + 273. Thermometric properties: expansion of liquid (mercury/alcohol), resistance (resistance thermometer), emf (thermocouple). Clinical thermometer has constriction.",
+    formula: ["T(K) = T(°C) + 273"],
+    tip: "JAMB: which thermometer is best for which use. Mercury: high temps. Alcohol: low temps. Thermocouple: very high temps, fast changes.",
+    q: {
+      text: "A temperature of 27°C is equivalent to",
+      opts: ["300K", "246K", "27K", "373K"],
+      ans: 0,
+      explain: "T(K) = 27 + 273 = 300K. This is a very common JAMB value — memorize 27°C = 300K."
+    }
+  },
+  {
+    title: "Thermal Expansion",
+    time: "~4 min",
+    color: "purple",
+    key: "Linear expansivity α: ΔL = L₀αΔT. Area expansivity β = 2α. Volume expansivity γ = 3α. Anomalous expansion of water: water is densest at 4°C, expands when cooling below 4°C (protects aquatic life in winter).",
+    formula: ["ΔL = L₀αΔT", "γ = 3α", "β = 2α"],
+    tip: "JAMB: a railway line expands in summer — gap must be left. Bimetallic strip bends toward metal with smaller α.",
+    q: {
+      text: "A metal rod 100cm long has linear expansivity 2×10⁻⁵/°C. Extension when heated by 50°C is",
+      opts: ["0.1cm", "1cm", "0.01cm", "10cm"],
+      ans: 0,
+      explain: "ΔL = L₀αΔT = 100 × 2×10⁻⁵ × 50 = 100 × 0.001 = 0.1 cm."
+    }
+  },
+  {
+    title: "Gas Laws",
+    time: "~5 min",
+    color: "green",
+    key: "Boyle's Law: PV = constant (constant T). Charles' Law: V/T = constant (constant P). Pressure Law: P/T = constant (constant V). General: PV/T = constant. Ideal gas: PV = nRT (R = 8.314 J/mol/K).",
+    formula: ["PV = constant (Boyle)", "V/T = constant (Charles)", "PV/T = k", "PV = nRT"],
+    tip: "Always convert Celsius to Kelvin before using gas laws! JAMB: P₁V₁/T₁ = P₂V₂/T₂.",
+    q: {
+      text: "A gas at 27°C and pressure 1×10⁵ Pa occupies 2m³. At 127°C and same pressure, its volume is",
+      opts: ["2.67 m³", "4 m³", "1.5 m³", "3 m³"],
+      ans: 0,
+      explain: "Charles' Law: V₁/T₁ = V₂/T₂. T₁=300K, T₂=400K. V₂ = 2×400/300 = 2.67 m³."
+    }
+  },
+  {
+    title: "Quantity of Heat",
+    time: "~4 min",
+    color: "",
+    key: "Q = mcΔT (c = specific heat capacity). Heat capacity C = mc. Method of mixtures: heat lost by hot body = heat gained by cold body. Specific heat of water = 4200 J/kg/°C.",
+    formula: ["Q = mcΔT", "m₁c₁ΔT₁ = m₂c₂ΔT₂ (mixtures)"],
+    tip: "JAMB: mixing hot and cold water — find final temperature. Set up heat lost = heat gained equation.",
+    q: {
+      text: "Energy needed to raise 2kg of water from 20°C to 70°C is (c = 4200 J/kg°C)",
+      opts: ["420 kJ", "210 kJ", "840 kJ", "42 kJ"],
+      ans: 0,
+      explain: "Q = mcΔT = 2 × 4200 × (70-20) = 2 × 4200 × 50 = 420,000J = 420 kJ."
+    }
+  },
+  {
+    title: "Change of State",
+    time: "~4 min",
+    color: "orange",
+    key: "Q = mL (L = specific latent heat). Latent heat of fusion of ice = 3.4×10⁵ J/kg. Latent heat of vaporisation of water = 2.26×10⁶ J/kg. Boiling point rises with increased pressure (pressure cooker). Melting point falls with increased pressure (ice).",
+    formula: ["Q = mL", "Q = mcΔT + mL (full heating)"],
+    tip: "During change of state, temperature stays CONSTANT. All energy goes into breaking/forming bonds, not raising temp.",
+    q: {
+      text: "Heat needed to completely melt 0.5 kg of ice at 0°C is (L_fusion = 3.4×10⁵ J/kg)",
+      opts: ["1.7×10⁵ J", "3.4×10⁵ J", "6.8×10⁵ J", "0.5 J"],
+      ans: 0,
+      explain: "Q = mL = 0.5 × 3.4×10⁵ = 1.7×10⁵ J. Temperature stays at 0°C throughout melting."
+    }
+  },
+  {
+    title: "Vapours & Humidity",
+    time: "~4 min",
+    color: "purple",
+    key: "SVP = saturated vapour pressure (max vapour pressure at given temp). Dew point = temp at which air becomes saturated. Relative humidity = (actual VP / SVP at that temp) × 100%.",
+    formula: ["RH = (actual VP / SVP) × 100%"],
+    tip: "Boiling occurs when SVP = atmospheric pressure. Higher altitude → lower atmospheric pressure → water boils below 100°C.",
+    q: {
+      text: "The relative humidity of air is 60% when the actual vapour pressure is 1.2 kPa. The SVP is",
+      opts: ["2 kPa", "0.72 kPa", "3 kPa", "1.8 kPa"],
+      ans: 0,
+      explain: "RH = actual VP/SVP × 100 → 60 = 1.2/SVP × 100 → SVP = 1.2×100/60 = 2 kPa."
+    }
+  },
+  {
+    title: "Kinetic Theory & Structure of Matter",
+    time: "~4 min",
+    color: "green",
+    key: "Brownian motion: evidence for molecular movement. Diffusion: spreading due to molecular motion. Cohesion: attraction between like molecules. Adhesion: attraction between unlike molecules. Capillarity: depends on cohesion vs adhesion.",
+    formula: ["PV = ⅓Nmc̄² (kinetic theory)"],
+    tip: "JAMB: Brownian motion proves molecules are in constant random motion. Surface tension = cohesive forces between surface molecules.",
+    q: {
+      text: "Brownian motion is evidence that",
+      opts: ["Molecules are in constant random motion", "Gas molecules are large", "Molecules are stationary", "Diffusion is slow"],
+      ans: 0,
+      explain: "The random, irregular movement of smoke/pollen particles is caused by unequal bombardment by invisible, fast-moving molecules."
+    }
+  },
+  {
+    title: "Heat Transfer",
+    time: "~4 min",
+    color: "",
+    key: "Conduction: needs medium, no bulk movement (solids). Convection: bulk fluid movement (liquids/gases). Radiation: no medium needed, electromagnetic waves. Good absorbers = good emitters (black/dull). Bad absorbers = good reflectors (shiny).",
+    formula: ["Q/t = kA(ΔT/Δx) (conduction)"],
+    tip: "JAMB: thermos flask — vacuum prevents conduction/convection, silvered walls reduce radiation. Land breeze at night, sea breeze by day.",
+    q: {
+      text: "Heat transfer by radiation differs from conduction and convection because it",
+      opts: ["Does not require a material medium", "Is faster than both", "Requires solid objects", "Only occurs in metals"],
+      ans: 0,
+      explain: "Radiation is electromagnetic wave energy (infra-red) that can travel through a vacuum — no medium needed, unlike conduction and convection."
+    }
+  },
+  {
+    title: "Waves – Production & Properties",
+    time: "~5 min",
+    color: "orange",
+    key: "v = fλ. Transverse: vibration ⊥ direction of travel (light, water). Longitudinal: vibration ∥ direction of travel (sound). Stationary waves: formed by superposition of two identical waves travelling in opposite directions.",
+    formula: ["v = fλ", "y = A sin 2π(vt/λ ± x/λ)"],
+    tip: "JAMB: diffraction is greatest when wavelength ≈ slit width. Interference: constructive (crest+crest), destructive (crest+trough).",
+    q: {
+      text: "A wave has frequency 200Hz and wavelength 1.5m. Its velocity is",
+      opts: ["300 m/s", "133 m/s", "1.5 m/s", "200 m/s"],
+      ans: 0,
+      explain: "v = fλ = 200 × 1.5 = 300 m/s."
+    }
+  },
+  {
+    title: "Sound Waves",
+    time: "~4 min",
+    color: "purple",
+    key: "Sound is longitudinal, needs material medium. Speed in solids > liquids > gases. Speed in air ≈ 340 m/s. Echo = reflected sound. Reverberation = multiple echoes. Minimum distance for echo = 17m (at 340 m/s).",
+    formula: ["d = v × t/2 (echo)", "Speed increases with temperature"],
+    tip: "JAMB: minimum distance for hearing echo = speed of sound × 0.1s / 2 = 17m (since minimum echo time = 0.1s).",
+    q: {
+      text: "A man stands 170m from a wall and claps. The echo is heard after",
+      opts: ["1 second", "0.5 seconds", "2 seconds", "0.1 seconds"],
+      ans: 0,
+      explain: "Time = 2d/v = 2×170/340 = 340/340 = 1 second. Sound travels to wall and back."
+    }
+  },
+  {
+    title: "Characteristics of Sound",
+    time: "~4 min",
+    color: "green",
+    key: "Pitch: determined by frequency (high frequency = high pitch). Loudness: determined by amplitude (large amplitude = louder). Quality/Timbre: determined by overtones/harmonics. Resonance: maximum vibration at natural frequency.",
+    formula: ["f₀ = (1/2L)√(T/m) (string)", "Open pipe: f = v/2L", "Closed pipe: f = v/4L"],
+    tip: "JAMB: closed pipe produces only odd harmonics (1st, 3rd, 5th). Open pipe produces all harmonics.",
+    q: {
+      text: "The frequency of the fundamental note produced by a closed pipe of length 0.85m is (v=340m/s)",
+      opts: ["100Hz", "200Hz", "50Hz", "400Hz"],
+      ans: 0,
+      explain: "Closed pipe: f = v/4L = 340/(4×0.85) = 340/3.4 = 100 Hz."
+    }
+  },
+  {
+    title: "Light – Sources & Propagation",
+    time: "~3 min",
+    color: "",
+    key: "Light travels in straight lines. Speed of light = 3×10⁸ m/s. Umbra: complete shadow. Penumbra: partial shadow. Pinhole camera: inverted image, magnification = image size/object size = image distance/object distance.",
+    formula: ["c = 3×10⁸ m/s", "Magnification = v/u (pinhole)"],
+    tip: "Lunar eclipse: Moon enters Earth's shadow. Solar eclipse: Moon's shadow falls on Earth.",
+    q: {
+      text: "A pinhole camera has object at 3m and pinhole at 0.3m from screen. Image of a 2m tall object is",
+      opts: ["0.2m", "20m", "2m", "0.02m"],
+      ans: 0,
+      explain: "m = v/u = 0.3/3 = 0.1. Image height = 0.1 × 2 = 0.2m. Image is inverted."
+    }
+  },
+  {
+    title: "Reflection of Light",
+    time: "~5 min",
+    color: "orange",
+    key: "Laws of reflection: angle of incidence = angle of reflection; incident ray, normal, reflected ray are coplanar. Mirror formula: 1/f = 1/u + 1/v. Concave: f is positive, used as shaving mirror, headlamp. Convex: always virtual, erect, diminished image (car rear-view mirror).",
+    formula: ["1/f = 1/u + 1/v", "m = v/u", "f = R/2"],
+    tip: "Sign convention: distances in direction of incident light are positive. JAMB frequently tests mirror formula — practice this.",
+    q: {
+      text: "An object is 30cm from a concave mirror of focal length 20cm. The image distance is",
+      opts: ["60cm", "12cm", "30cm", "-60cm"],
+      ans: 0,
+      explain: "1/v = 1/f - 1/u = 1/20 - 1/30 = 3/60 - 2/60 = 1/60. v = 60cm (real image, same side as object)."
+    }
+  },
+  {
+    title: "Refraction of Light",
+    time: "~5 min",
+    color: "purple",
+    key: "Snell's law: n₁sinθ₁ = n₂sinθ₂. Refractive index n = c/v = sin i/sin r. Total internal reflection: when angle of incidence > critical angle. sinC = 1/n. Applications: optical fibre, periscope, diamond.",
+    formula: ["n = sin i / sin r", "sin C = 1/n", "n = real depth / apparent depth"],
+    tip: "Total internal reflection only happens when light travels from denser to less dense medium. Critical angle: sin C = 1/n.",
+    q: {
+      text: "The critical angle for glass with refractive index 1.5 is",
+      opts: ["41.8°", "30°", "60°", "48.2°"],
+      ans: 0,
+      explain: "sin C = 1/n = 1/1.5 = 0.667. C = sin⁻¹(0.667) = 41.8°. Light hitting at more than this undergoes TIR."
+    }
+  },
+  {
+    title: "Optical Instruments",
+    time: "~4 min",
+    color: "green",
+    key: "Lens formula: 1/f = 1/u + 1/v. Power P = 1/f (in dioptres). Short sight: corrected by concave lens. Long sight: corrected by convex lens. Compound microscope: both lenses converging. Telescope: objective (wide, long f), eyepiece (short f).",
+    formula: ["P = 1/f", "M = v/u × D/f_e"],
+    tip: "JAMB: power of lens in dioptres = 1/f. Two thin lenses in contact: P = P₁ + P₂.",
+    q: {
+      text: "A converging lens has focal length 25cm. Its power is",
+      opts: ["4 D", "25 D", "0.25 D", "40 D"],
+      ans: 0,
+      explain: "P = 1/f(m) = 1/0.25 = 4 dioptres. Always convert focal length to metres."
+    }
+  },
+  {
+    title: "Dispersion of Light & Electromagnetic Spectrum",
+    time: "~4 min",
+    color: "",
+    key: "White light disperses through prism: ROYGBIV (red bends least, violet most). Primary colours of light: Red, Green, Blue (additive). Primary pigments: Cyan, Magenta, Yellow (subtractive). EM spectrum: radio → microwave → IR → visible → UV → X-ray → gamma.",
+    formula: ["n = sin((A+D)/2) / sin(A/2) (minimum deviation)"],
+    tip: "JAMB: complementary colours sum to white. Red + Cyan = White. X-rays: detect bone fractures. Gamma rays: treat cancer, sterilize equipment.",
+    q: {
+      text: "Which colour of light is deviated most when passing through a glass prism?",
+      opts: ["Violet", "Red", "Green", "Yellow"],
+      ans: 0,
+      explain: "Violet has the shortest wavelength and highest frequency in visible light, so it slows down most in glass and bends (refracts) most."
+    }
+  },
+  {
+    title: "Electrostatics",
+    time: "~5 min",
+    color: "orange",
+    key: "Coulomb's law: F = kq₁q₂/r². k = 9×10⁹ Nm²/C². Electric field E = F/q = kQ/r². Potential V = kQ/r. Charge distributes on surface of conductor; highest density at sharp points (lightning conductor).",
+    formula: ["F = kq₁q₂/r²", "E = kQ/r²", "V = kQ/r"],
+    tip: "JAMB: if two identical charged spheres touch, total charge is shared equally. Induced charge is opposite to inducing charge.",
+    q: {
+      text: "Two charges of 2μC and 3μC are 3cm apart. The force between them is (k=9×10⁹)",
+      opts: ["60N", "6N", "0.6N", "600N"],
+      ans: 0,
+      explain: "F = kq₁q₂/r² = 9×10⁹ × 2×10⁻⁶ × 3×10⁻⁶ / (0.03)² = 9×10⁹ × 6×10⁻¹²/9×10⁻⁴ = 54×10⁻³/9×10⁻⁴ = 60N."
+    }
+  },
+  {
+    title: "Capacitors",
+    time: "~4 min",
+    color: "purple",
+    key: "C = εA/d. Capacitors in parallel: C = C₁+C₂+C₃. In series: 1/C = 1/C₁+1/C₂+1/C₃. Energy stored = ½CV² = ½QV = Q²/2C. Dielectric between plates increases capacitance.",
+    formula: ["C = εA/d", "E = ½CV²", "Series: 1/C = 1/C₁+1/C₂"],
+    tip: "Same as resistors but OPPOSITE rules: parallel capacitors ADD, series capacitors give reciprocal sum (unlike resistors).",
+    q: {
+      text: "Two capacitors of 4μF and 12μF are connected in series. The effective capacitance is",
+      opts: ["3μF", "16μF", "48μF", "8μF"],
+      ans: 0,
+      explain: "1/C = 1/4 + 1/12 = 3/12 + 1/12 = 4/12. C = 12/4 = 3μF."
+    }
+  },
+  {
+    title: "Electric Cells & Current",
+    time: "~5 min",
+    color: "green",
+    key: "EMF = terminal voltage + lost volts. E = V + Ir. V = IR. Cells in series: E = E₁+E₂, r = r₁+r₂. Parallel (identical): E = E₁, r = r₁/n. Ohm's law: V = IR. Resistivity ρ: R = ρL/A.",
+    formula: ["E = V + Ir", "V = IR", "R = ρL/A"],
+    tip: "JAMB: short circuit current = E/r. Terminal voltage at max current is zero. Practice internal resistance problems.",
+    q: {
+      text: "A cell of EMF 2V and internal resistance 0.5Ω drives current through 1.5Ω. The terminal voltage is",
+      opts: ["1.5V", "2V", "1V", "0.5V"],
+      ans: 0,
+      explain: "I = E/(R+r) = 2/(1.5+0.5) = 2/2 = 1A. Terminal V = E - Ir = 2 - 1×0.5 = 1.5V."
+    }
+  },
+  {
+    title: "Electrical Energy & Power",
+    time: "~4 min",
+    color: "",
+    key: "P = IV = I²R = V²/R. Energy = Pt = VIt. 1 unit of electricity = 1 kWh = 3.6×10⁶J. Heating effect: H = I²Rt (Joule's law). Power transmission uses high voltage to reduce I²R losses.",
+    formula: ["P = IV = I²R = V²/R", "1 kWh = 3.6×10⁶ J"],
+    tip: "JAMB: electricity bill calculation. Energy (kWh) = Power(kW) × Time(hours). Cost = Energy × tariff.",
+    q: {
+      text: "A 100W bulb is used for 5 hours daily for 30 days. The energy consumed in kWh is",
+      opts: ["15 kWh", "150 kWh", "1.5 kWh", "0.15 kWh"],
+      ans: 0,
+      explain: "E = P×t = 0.1kW × (5×30)h = 0.1 × 150 = 15 kWh."
+    }
+  },
+  {
+    title: "Magnets & Magnetic Fields",
+    time: "~4 min",
+    color: "orange",
+    key: "Soft iron: easily magnetised/demagnetised (electromagnets, transformer cores). Steel: hard to magnetise/demagnetise (permanent magnets). Earth's field: angle of dip (angle B makes with horizontal), declination (angle between geographic and magnetic north).",
+    formula: ["B = μ₀I/2πr (wire)", "B = μ₀nI (solenoid)"],
+    tip: "JAMB: field lines go from N to S outside a magnet. Neutral points occur where two fields cancel. Right-hand grip rule for current in wire.",
+    q: {
+      text: "Which material is most suitable for making the core of an electromagnet?",
+      opts: ["Soft iron", "Steel", "Copper", "Aluminium"],
+      ans: 0,
+      explain: "Soft iron is used because it magnetises and demagnetises easily — essential for an electromagnet that must switch on/off. Steel retains magnetism (for permanent magnets)."
+    }
+  },
+  {
+    title: "Force on Current-Carrying Conductors",
+    time: "~4 min",
+    color: "purple",
+    key: "F = BIL sinθ. Fleming's LEFT-hand rule: thumb = force, index = field, middle = current. DC motor uses split-ring commutator. Force on moving charge: F = qvB sinθ.",
+    formula: ["F = BIL sinθ", "F = qvB sinθ"],
+    tip: "Left hand = motor (force/motion). Right hand = generator (generator rule / dynamo). JAMB tests this distinction frequently.",
+    q: {
+      text: "A wire of length 0.5m carrying 4A is placed perpendicular to a 0.2T field. The force on it is",
+      opts: ["0.4N", "4N", "0.04N", "40N"],
+      ans: 0,
+      explain: "F = BIL sinθ = 0.2 × 4 × 0.5 × sin90° = 0.2 × 4 × 0.5 × 1 = 0.4N."
+    }
+  },
+  {
+    title: "Electromagnetic Induction",
+    time: "~5 min",
+    color: "green",
+    key: "Faraday's law: EMF = -ΔΦ/Δt (induced EMF proportional to rate of change of flux). Lenz's law: induced current opposes the change causing it. Transformer: V_s/V_p = N_s/N_p = I_p/I_s. Step-up: N_s>N_p. Step-down: N_s<N_p.",
+    formula: ["EMF = -NΔΦ/Δt", "V_s/V_p = N_s/N_p"],
+    tip: "JAMB: transformer efficiency ≈100% so I_p V_p = I_s V_s. High voltage for transmission reduces current and thus reduces I²R heat loss.",
+    q: {
+      text: "A transformer has 200 primary turns and 1000 secondary turns. If input is 240V, output is",
+      opts: ["1200V", "48V", "240V", "2000V"],
+      ans: 0,
+      explain: "V_s/V_p = N_s/N_p → V_s = 240 × 1000/200 = 240 × 5 = 1200V. This is a step-up transformer."
+    }
+  },
+  {
+    title: "AC Circuits",
+    time: "~5 min",
+    color: "",
+    key: "RMS voltage = V_peak/√2. RMS current = I_peak/√2. Capacitive reactance X_C = 1/2πfC. Inductive reactance X_L = 2πfL. Impedance Z = √(R² + (X_L-X_C)²). Resonance: f₀ = 1/(2π√LC), X_L = X_C.",
+    formula: ["V_rms = V_0/√2", "Z = √(R²+(X_L-X_C)²)", "f₀ = 1/(2π√LC)"],
+    tip: "At resonance, impedance is minimum (= R) and current is maximum. Radio tuning uses resonance to select frequency.",
+    q: {
+      text: "An AC voltage of peak value 100V has an RMS value of approximately",
+      opts: ["70.7V", "100V", "141V", "50V"],
+      ans: 0,
+      explain: "V_rms = V_peak/√2 = 100/1.414 ≈ 70.7V. The household 220V (rms) has a peak of about 311V."
+    }
+  },
+  {
+    title: "Electrolysis & Conduction in Gases",
+    time: "~4 min",
+    color: "orange",
+    key: "Faraday's 1st law: mass deposited ∝ charge (m = ZIt). 2nd law: mass ∝ electrochemical equivalent. ECE Z = A/(nF) (A=atomic mass, n=valence, F=96500C/mol). Applications: electroplating, refining, ammeter calibration.",
+    formula: ["m = ZIt", "Z = A/(nF)"],
+    tip: "JAMB: cathode = reduction (positive ions deposited). Anode = oxidation. In electroplating, object is cathode.",
+    q: {
+      text: "A current of 2A flows for 30 minutes through CuSO₄ solution (Z=3.29×10⁻⁴ g/C). Mass of Cu deposited is",
+      opts: ["1.19g", "11.9g", "0.119g", "119g"],
+      ans: 0,
+      explain: "m = ZIt = 3.29×10⁻⁴ × 2 × (30×60) = 3.29×10⁻⁴ × 3600 = 1.1844 ≈ 1.19g."
+    }
+  },
+  {
+    title: "Modern Physics",
+    time: "~6 min",
+    color: "purple",
+    key: "Photoelectric effect: E = hf = hc/λ. Work function φ = hf₀. KE_max = hf - φ. Einstein's mass-energy: E = mc². Half-life: N = N₀(½)^(t/T½). Activity A = λN. Binding energy = mass defect × c².",
+    formula: ["E = hf", "KE = hf - φ", "E = mc²", "N = N₀(½)^(t/T½)"],
+    tip: "JAMB: α-decay: Z-2, A-4. β-decay: Z+1, A same. γ: no change to Z or A. Half-life is constant — independent of physical/chemical conditions.",
+    q: {
+      text: "A radioactive element has half-life 20 days. After 60 days, fraction remaining is",
+      opts: ["1/8", "1/4", "1/2", "1/16"],
+      ans: 0,
+      explain: "Number of half-lives = 60/20 = 3. Remaining fraction = (½)³ = 1/8."
+    }
+  },
+  {
+    title: "Electronics & Semiconductors",
+    time: "~4 min",
+    color: "green",
+    key: "Conductors: overlapping valence/conduction bands. Semiconductors: small band gap (Si, Ge). Insulators: large band gap. n-type: donor (pentavalent e.g. phosphorus) — extra electrons. p-type: acceptor (trivalent e.g. boron) — holes. Diode: forward bias = conducts. Reverse bias = blocks. Rectification: AC → DC.",
+    formula: ["Half-wave rectifier: 1 diode", "Full-wave rectifier: 4 diodes (bridge)"],
+    tip: "JAMB: transistor used as amplifier or switch. In a PNP transistor, emitter and collector are p-type; base is n-type.",
+    q: {
+      text: "In a p-n junction diode, current flows when",
+      opts: ["P-side is connected to positive terminal", "N-side to positive terminal", "Both terminals to same side", "Reverse biased"],
+      ans: 0,
+      explain: "Forward bias: connect p-side to + and n-side to −. This narrows the depletion region and allows current to flow."
+    }
+  }
+];
+
+let currentTopic = 0;
+let answeredTopics = new Set();
+let timerInterval;
+let secondsLeft = 3 * 60 * 60;
+
+function formatTime(s) {
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    document.getElementById('timerDisplay').textContent = formatTime(secondsLeft);
+    if (secondsLeft <= 600) document.getElementById('timerDisplay').style.color = '#f87171';
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      showScore();
+    }
+  }, 1000);
+}
+
+function startSession() {
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('session').classList.remove('hidden');
+  buildDotTrack();
+  renderTopic();
+  startTimer();
+}
+
+function buildDotTrack() {
+  const track = document.getElementById('dotTrack');
+  track.innerHTML = '';
+  TOPICS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot-step' + (i === 0 ? ' active' : '');
+    d.id = `dot-${i}`;
+    track.appendChild(d);
+  });
+}
+
+function renderTopic() {
+  const t = TOPICS[currentTopic];
+  const total = TOPICS.length;
+  document.getElementById('topicCounter').textContent = `${currentTopic+1} / ${total}`;
+  document.getElementById('progressBar').style.width = `${((currentTopic+1)/total)*100}%`;
+
+  // Update dots
+  TOPICS.forEach((_, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    d.className = 'dot-step' + (i===currentTopic ? ' active' : (answeredTopics.has(i) ? ' done' : ''));
+  });
+
+  document.getElementById('prevBtn').disabled = currentTopic === 0;
+
+  const colorClass = t.color ? ` ${t.color}` : '';
+  const formulaHtml = t.formula.map(f => `<span class="formula">${f}</span>`).join(' ');
+
+  const opts = t.q.opts.map((o, i) => 
+    `<div class="opt" id="opt-${i}" onclick="checkAnswer(${i})">
+      <span class="opt-key">${String.fromCharCode(65+i)}</span>${o}
+    </div>`
+  ).join('');
+
+  document.getElementById('topicContent').innerHTML = `
+    <div class="section-header">
+      <div class="section-label">Topic ${currentTopic+1} of ${total}</div>
+      <div class="section-title">${t.title}</div>
+      <div class="section-time">⏱ Suggested time: ${t.time}</div>
+    </div>
+
+    <div class="content-card${colorClass}">
+      <div class="card-tag${colorClass}">📖 Key Concepts</div>
+      <div class="card-body">${t.key.replace(/([A-Z][a-z]+(?:'s)? (?:law|principle|theorem|effect|rule))/g, '<strong>$1</strong>')} <br/><br/>
+        <strong>Key Formulas:</strong> ${formulaHtml}
+      </div>
+    </div>
+
+    <div class="content-card orange">
+      <div class="card-tag orange">💡 JAMB Tip</div>
+      <div class="card-body">${t.tip}</div>
+    </div>
+
+    <div class="content-card green">
+      <div class="card-tag green">❓ Past-Question Style</div>
+      <div class="card-body">
+        <div class="past-q">
+          <div class="past-q-label">🎯 Attempt this question</div>
+          <div class="past-q-text">${t.q.text}</div>
+          <div class="options">${opts}</div>
+          <div class="answer-reveal" id="answerReveal">
+            ✅ <strong>Explanation:</strong> ${t.q.explain}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-box">
+      <div class="ai-box-header">
+        <div class="ai-avatar">AI</div>
+        <div class="ai-label">Ask your AI Tutor about this topic</div>
+      </div>
+      <div class="ai-response" id="aiResponse">Type a question below — e.g. "Explain this topic more simply" or "Give me another example question"</div>
+      <div class="ai-input-row">
+        <input class="ai-input" id="aiInput" placeholder="Ask something about ${t.title}..." onkeydown="if(event.key==='Enter') askTutor()"/>
+        <button class="ai-btn" id="aiAskBtn" onclick="askTutor()">Ask →</button>
+      </div>
+    </div>
+  `;
+}
+
+function checkAnswer(idx) {
+  const t = TOPICS[currentTopic];
+  for (let i = 0; i < t.q.opts.length; i++) {
+    const el = document.getElementById(`opt-${i}`);
+    el.onclick = null;
+    if (i === t.q.ans) el.classList.add('correct');
+    else if (i === idx && idx !== t.q.ans) el.classList.add('wrong');
+  }
+  document.getElementById('answerReveal').classList.add('show');
+  answeredTopics.add(currentTopic);
+  document.getElementById(`dot-${currentTopic}`).className = 'dot-step done';
+}
+
+function navigate(dir) {
+  currentTopic = Math.max(0, Math.min(TOPICS.length-1, currentTopic + dir));
+  if (currentTopic === TOPICS.length - 1 && dir === 1 && answeredTopics.size > 0) {
+    // Can show score on last topic advance if all done
+  }
+  renderTopic();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+async function askTutor() {
+  const input = document.getElementById('aiInput');
+  const btn = document.getElementById('aiAskBtn');
+  const responseEl = document.getElementById('aiResponse');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const t = TOPICS[currentTopic];
+  btn.disabled = true;
+  input.disabled = true;
+  responseEl.innerHTML = '<div class="thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+
+  const systemPrompt = `You are an expert JAMB Physics tutor explaining to Nigerian secondary school students preparing for UTME. 
+Current topic: ${t.title}. Key concepts: ${t.key}. 
+Explain clearly and simply. Use relatable examples. Where relevant, mention how JAMB typically tests this. 
+Keep answer under 200 words. Use plain text, no markdown symbols.`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: "user", content: question }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.find(c => c.type === 'text')?.text || "Sorry, I could not get a response.";
+    responseEl.textContent = text;
+  } catch (e) {
+    responseEl.textContent = "Network error. Please check your connection and try again.";
+  }
+
+  btn.disabled = false;
+  input.disabled = false;
+  input.value = '';
+}
+
+function showScore() {
+  clearInterval(timerInterval);
+  document.getElementById('session').classList.add('hidden');
+  document.getElementById('scoreScreen').style.display = 'block';
+  document.getElementById('scoreBig').textContent = `${answeredTopics.size}/${TOPICS.length}`;
+}
+</script>
+</body>
+</html>
